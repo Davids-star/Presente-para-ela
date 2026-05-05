@@ -87,10 +87,22 @@
       text-align: center;
     }
 
-    .success-emoji {
-      font-size: 3rem;
+    .success-gif-wrap {
+      margin-bottom: 1.2rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-gif {
+      width: 100%;
+      max-height: 260px;
       display: block;
-      margin-bottom: 1rem;
+      border-radius: 12px;
+      object-fit: cover;
     }
 
     .success-title {
@@ -144,7 +156,15 @@
 
   <!-- Sucesso -->
   <div class="success" v-if="showSuccess">
-    <span class="success-emoji">🥰</span>
+    <div class="success-gif-wrap">
+      <video
+        id="success-gif"
+        class="success-gif"
+        autoplay loop muted playsinline
+      >
+        <source src="media/video.mp4" type="video/mp4" />
+      </video>
+    </div>
     <h2 class="success-title">Que bom, preta!</h2>
     <p class="success-text">Você fez escolheu, usufruindo do seu livre arbítrio. Te amo!❤️</p>
     <button class="btn-ir" id="btn-ir" @click="irParaSite">Abrir presente 🎁</button>
