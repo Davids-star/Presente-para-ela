@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pedido de Namoro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #f9f9f9;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 16px;
+      padding: 2.5rem 3rem;
+      text-align: center;
+      max-width: 380px;
+      width: 100%;
+    }
+
+    .card-emoji {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 2rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* Sim */
+    .btn-sim {
+      padding: 0.6rem 1.8rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #fff;
+      background: #111;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-sim:hover { background: #333; }
+
+    /* Não */
+    .btn-nao {
+      padding: 0.6rem 1.8rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #111;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-nao:hover { background: #f3f3f3; }
+
+    /* Teleportando */
+    .btn-nao.flying {
+      position: fixed;
+      margin: 0;
+    }
+
+    /* ─── Tela de sucesso ─── */
+    .success {
+      text-align: center;
+    }
+
+    .success-gif-wrap {
+      margin-bottom: 1.2rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-gif {
+      width: 100%;
+      max-height: 260px;
+      display: block;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .success-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-text {
+      font-size: 0.95rem;
+      color: #555;
+      margin-bottom: 1.8rem;
+      line-height: 1.6;
+    }
+
+    .btn-ir {
+      padding: 0.6rem 1.8rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #fff;
+      background: #111;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .btn-ir:hover { background: #333; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Pergunta -->
+  <div class="card" v-if="!showSuccess">
+    <span class="card-emoji">💕</span>
+    <h1 class="card-title">Letícia,Você aceita namorar comigo?</h1>
+
+    <div class="btn-row">
+      <button class="btn-sim" id="btn-sim" @click="onSim">Sim</button>
+      <button
+        class="btn-nao"
+        id="btn-nao"
+        :class="{ flying: hasFlown }"
+        :style="naoStyle"
+        @click="onNao"
+      >Não</button>
+    </div>
+  </div>
+
+  <!-- Sucesso -->
+  <div class="success" v-if="showSuccess">
+    <div class="success-gif-wrap">
+      <video
+        id="success-gif"
+        class="success-gif"
+        autoplay loop muted playsinline
+      >
+        <source src="media/video.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <h2 class="success-title">Que bom, preta!</h2>
+    <p class="success-text">Você fez escolheu, usufruindo do seu livre arbítrio. Te amo!❤️</p>
+    <button class="btn-ir" id="btn-ir" @click="irParaSite">Abrir presente 🎁</button>
+  </div>
+
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+  const { createApp } = Vue;
+
+  createApp({
+    data() {
+      return {
+        hasFlown: false,
+        naoStyle: {},
+        showSuccess: false,
+        linkSurpresa: 'flores2.html',
+      };
+    },
+    methods: {
+      onNao() {
+        this.hasFlown = true;
+        const btn = document.getElementById('btn-nao');
+        const w = btn ? btn.offsetWidth  : 80;
+        const h = btn ? btn.offsetHeight : 38;
+        const margin = 12;
+        const maxX = window.innerWidth  - w - margin;
+        const maxY = window.innerHeight - h - margin;
+        let x, y;
+        do {
+          x = Math.floor(Math.random() * maxX) + margin;
+          y = Math.floor(Math.random() * maxY) + margin;
+        } while (
+          Math.abs(x - window.innerWidth  / 2) < 120 &&
+          Math.abs(y - window.innerHeight / 2) < 100
+        );
+        this.naoStyle = { top: y + 'px', left: x + 'px' };
+      },
+      onSim() {
+        this.showSuccess = true;
+      },
+      irParaSite() {
+        window.location.href = this.linkSurpresa;
+      },
+    },
+  }).mount('#app');
+</script>
+</body>
+</html>
